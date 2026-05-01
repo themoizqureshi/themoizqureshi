@@ -1,71 +1,91 @@
-## 👋 Hello World!
+# Hey, I'm Moiz 👋
 
-I'm Moiz Qureshi, a passionate software developer with a love for crafting innovative and efficient applications. I believe in the power of code to transform ideas into reality, and I'm constantly exploring new technologies to stay at the forefront of the ever-evolving tech landscape.
+AI Engineer building production LLM systems — agentic RAG, multi-agent orchestration, and LLMOps pipelines that actually ship.
 
-## 💻 Tech Stack
+Currently at **Speridian Technologies** as an LLM/GenAI SME, where I've built conversational AI adopted by 5,000+ loan officers and document extraction pipelines processing 500K+ mortgage documents monthly at ~99% accuracy.
 
-- **Languages:** I'm proficient in C#, JavaScript, TypeScript, and SQL, and always eager to learn more.
-- **Frameworks:** I have hands-on experience with ASP.NET, React.js, and Next.js, leveraging their capabilities to build robust and scalable applications.
-- **Databases:** My expertise extends to MSSQL, PostgreSQL, and Supabase ensuring data integrity and efficient storage solutions.
-- **Tools:** I am adept at using Visual Studio, VS Code, Git, Docker, Dev Tools, Postman, and JIRA, streamlining the development process for optimal results.
+5 years of backend engineering under the hood (CQRS, event sourcing, distributed systems on .NET + Azure/GCP) — so I build AI that holds up in production, not just in demos.
 
-## 🚀 What I Do
+---
 
-I specialize in developing Web applications, with a focus on User experience and performance optimization. I thrive in collaborative environments and enjoy tackling complex problems to deliver elegant solutions.
+## 🤖 AI / LLM Portfolio
 
-## 🌱 Always Learning
+Five projects built in sequence — each one solves a real problem that the previous one exposed.
 
-The world of technology is dynamic, and I am committed to continuous learning. Whether it's exploring new programming languages, diving into emerging frameworks, or keeping up with industry best practices, I'm always eager to expand my skill set.
+---
 
-<!-- ## 📫 Let's Connect
+### 1 · [RAG Chatbot](https://github.com/themoizqureshi/rag-chatbot-langchain) — LangChain · ChromaDB · Gemini · Streamlit
+> *"LLMs hallucinate. RAG is the fix."*
 
-I'm always open to interesting projects, collaborations, and discussions. If you share a passion for software development or have an exciting idea, feel free to reach out!
+PDF Q&A chatbot grounded entirely in source documents. Built with LangChain 0.3 LCEL, ChromaDB, Google `text-embedding-004`, and LangSmith observability. The system prompt design here — forcing the LLM to only answer from retrieved context — became the baseline that Project 2 rigorously evaluated.
 
-- **LinkedIn:** [Your LinkedIn Profile](Link to your LinkedIn profile)
-- **Email:** [Your Email Address]
--->
-## 🎯 Current Goals
+**Key decisions:** chunk size 1000/overlap 200 tuned via downstream RAGAS scores · LCEL pipe operator for composable, traceable chains · `st.session_state` to avoid re-initialising ChromaDB on every message (saves 3–5s per response)
 
-I'm currently working on mastering Next.js. Stay tuned for updates on my GitHub repositories!
+---
 
-## 🌐 Explore My Repositories
+### 2 · [RAG Evaluation Pipeline](https://github.com/themoizqureshi/rag-evaluation-pipeline) — RAGAS · Gemini-as-Judge · LangSmith · pandas
+> *"It seems to work is not an engineering measurement."*
 
-Feel free to explore my GitHub repositories to get a glimpse of my coding journey. Don't hesitate to raise issues, provide feedback, or even contribute if you find something interesting!
+Automated evaluation pipeline for RAG systems. Hand-crafted Q&A dataset at 3 difficulty levels, RAGAS scoring (faithfulness / answer relevancy / context recall / context precision), delta comparison reports, and LangSmith per-question traces that show exactly *where* your system fails — retrieval or generation.
 
-Happy coding! 🚀
+**Results:** +23.6% faithfulness · +19.1% answer relevancy through prompt iteration alone. Context recall failures required changing the retrieval layer, not the prompt — you'd never know that from aggregate scores.
 
-<!--🌟 **About Me:**
-- 🐉 I'm a passionate demon slayer from the anime world, but when I'm not wielding my sword, I'm coding away!
-- 🔥 I believe in harnessing the power of technology to make the world a better place, just like I strive to protect it in my adventures.
-- 🌱 I'm currently learning more about advanced JavaScript techniques to enhance my coding skills and build amazing applications.
+---
 
-💻 **Tech Stack:**
-- 📚 Languages: JavaScript
-- 🛠 Tools: Node.js, React, Vue.js
+### 3 · [Local LLM RAG + FastAPI](https://github.com/themoizqureshi/local-llm-rag-pinecone) — Llama 3.2 · Ollama · Pinecone · LlamaIndex · Docker
+> *"What if you can't send your documents to a cloud API?"*
 
-🚀 **Projects:**
-- 🌐 I'm currently working on a web application that helps fellow demon slayers connect and share their experiences.
-- 🎮 In my spare time, I'm developing a game that teaches the basics of coding through fun and interactive demon-slaying quests.
+Same RAG concept — but cloud-agnostic. Llama 3.2 runs locally via Ollama (data never leaves the machine). BAAI/bge-small-en-v1.5 embeddings run locally (MTEB-ranked, no API key). Pinecone handles vector storage. Exposed as a proper FastAPI REST service with Docker support.
 
-🤝 **Let's Connect:**
-- 📫 How to reach me: Send a carrier crow! (Or just drop me a message on GitHub)
-- ⚔️ Fun fact: When I'm not coding or slaying demons, I enjoy spending time in nature and practicing my water breathing techniques.
+**Key decisions:** FastAPI lifespan pattern loads the 130MB model once at startup, not per-request · `request_timeout=120s` on Ollama to handle CPU inference latency · Intentional LlamaIndex usage (vs LangChain in P1) to show framework-agnostic thinking
 
-Let's embark on this coding journey toghether! 💪👹
+---
 
--->
-<!--
-**themoizqureshi/themoizqureshi** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+### 4 · [Multi-Agent Research Assistant](https://github.com/themoizqureshi/multi-agent-langgraph) — LangGraph · Gemini · Tavily · Human-in-the-Loop
+> *"A single LLM call can't do everything well. Specialise."*
 
-Here are some ideas to get you started:
+Three agents orchestrated by LangGraph: **Researcher** (Tavily web search) · **Retriever** (ChromaDB local docs) · **Writer** (Gemini synthesis). A human-in-the-loop `interrupt_before` checkpoint pauses the graph before the final report — you approve or add feedback before it completes.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+**Key decisions:** `Annotated[List, operator.add]` state accumulation so agents' results merge, not overwrite · routing via `completed_agents` state decouples graph topology from hard-coded order · agents as pure `(state) -> dict` functions for isolated unit testing
 
+---
+
+### 5 · [LLMOps Pipeline](https://github.com/themoizqureshi/llmops-pipeline) — MLflow · RAGAS · GitHub Actions · Prompt Versioning
+> *"How do you know when a prompt change breaks your system before users do?"*
+
+The answer: you don't — unless you build this. Prompt versioning as code (files + `registry.json`), MLflow experiment tracking with run comparison UI, A/B testing harness, and a GitHub Actions CI/CD pipeline that runs RAGAS on every push and **fails the build** if any metric drops below threshold.
+
+**Key decisions:** path-based CI trigger (`src/**`, `prompts/**`) — README changes don't burn API quota · 0.07 threshold buffer absorbs LLM-as-judge variance (±0.03) while still catching real regressions (typically >0.10 drop) · `sys.exit(1)` as the CI contract — simplest possible quality gate
+
+---
+
+## 🏭 What I've Shipped at Work
+
+**Enterprise Conversational AI — Vertex AI · Gemini · Microsoft 365**
+Agentic RAG chatbot across SharePoint, OneDrive, and Outlook. Tool calling for intent routing, query expansion, session-based enterprise search, chain-of-thought reasoning, Gemini streaming responses. Adopted by **5,000+ loan officers**. Reduced document retrieval time by **70%**.
+
+**Document Validation AI — Google Discovery Engine · Gemini · GCP**
+Trained Google Discovery Engine for structured field extraction from mortgage PDFs — model-level document understanding, not OCR. **~99% field-level accuracy**. Eliminated manual verification for **80%+ of documents**. Processes **500K+ documents/month**.
+
+---
+
+## 🛠 Stack
+
+```
+LLMs & AI     Vertex AI · Gemini · LangChain · LangGraph · LlamaIndex
+              Ollama · Llama 3.2 · RAGAS · MLflow · LangSmith
+Retrieval     ChromaDB · Pinecone · Google Discovery Engine · Tavily
+              BAAI/bge-small · text-embedding-004
+Backend       Python · C# · .NET 8 · FastAPI · TypeScript
+Cloud         GCP (Vertex AI, Agent Builder, GCS) · Azure (Functions, App Services, DevOps)
+Architecture  Microservices · CQRS · Event Sourcing · Agentic Workflows
+Infra         Docker · GitHub Actions · CI/CD · New Relic
+```
+
+---
+
+## 📬 Let's Talk
+
+Open to **Applied AI Engineer** and **Senior LLM Engineer** roles — product companies, AI-native startups, and ambitious enterprise AI teams.
+
+[LinkedIn](https://www.linkedin.com/in/themoizqureshi) · [themoizqureshi@gmail.com](mailto:themoizqureshi@gmail.com) · Bangalore (open to remote)
